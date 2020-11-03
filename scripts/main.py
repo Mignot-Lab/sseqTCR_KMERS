@@ -54,7 +54,19 @@ def writeDicts(kmerDict, chain):
             row = [k, len(k), k2, v2]
             writer.writerow(row)
 
+def jsonDump(dict, jsonFile):
+	with open(jsonFile, 'w') as F:
+		json.dump(dict, F)
 
-processedDicts=processSseq(sseqFile = 'data/pnasRaw.csv')
-writeDicts(kmerDict=processedDicts[0], chain='BETA') 
-writeDicts(kmerDict=processedDicts[1], chain='ALPHA') 
+def main():
+    parser = argparse.ArgumentParser(description='Script to make KMERS from single cell TCR sequencing')
+    parser.add_argument('-S', help='csv file with identifiers and cdr3b, cdr3a and alt cdr3a, see example in data folder', required=True)
+    args=parser.parse_args()
+    sseqFile=args.S
+    processedDicts=processSseq(sseqFile = sseqFile)
+    writeDicts(kmerDict=processedDicts[0], chain='BETA') 
+    writeDicts(kmerDict=processedDicts[1], chain='ALPHA')
+    jsonDump(dict=processedDicts[2], jsonFile='outputs/ALPHA_DUMP.json')
+    jsonDump(dict=processedDicts[3], jsonFile='outputs/BETA_DUMP.json')
+
+if __name__ == "__main__":main()
