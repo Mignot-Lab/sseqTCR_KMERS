@@ -41,6 +41,7 @@ def processSseq(sseqFile):
                         cdra = row[5]
                         for kmerL in range(3, 6):
                             processKmers(kmerLength=kmerL, cdr=cdra, kmerDict=kmerDictAlpha, key=key, cdrDict=cdrDictAlpha)
+    print("PROCESSED {}".format(sseqFile))
     return [kmerDictBeta, kmerDictAlpha, cdrDictAlpha, cdrDictBeta]
 
 
@@ -66,7 +67,9 @@ def main():
     processedDicts=processSseq(sseqFile = sseqFile)
     writeDicts(kmerDict=processedDicts[0], chain='BETA') 
     writeDicts(kmerDict=processedDicts[1], chain='ALPHA')
-    jsonDump(dict=processedDicts[2], jsonFile='outputs/ALPHA_DUMP.json')
-    jsonDump(dict=processedDicts[3], jsonFile='outputs/BETA_DUMP.json')
+    alphaDump = {i:','.join(list(j)) for i, j in processedDicts[2].items()}
+    betaDump = {i:','.join(list(j)) for i, j in processedDicts[3].items()}
+    jsonDump(dict=alphaDump, jsonFile='outputs/ALPHA_DUMP.json')
+    jsonDump(dict=betaDump, jsonFile='outputs/BETA_DUMP.json')
 
 if __name__ == "__main__":main()
